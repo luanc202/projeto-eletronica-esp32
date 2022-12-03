@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "babel-plugin-inline-dotenv": "^1.7.0",
     "ts-node": "^10.9.1"
   },
   "private": true
