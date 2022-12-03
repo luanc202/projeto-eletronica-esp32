@@ -14,7 +14,9 @@ export default function Home() {
     try {
       setIsLoading(true);
 
-      await api.get('/temp');
+      const response = await api.get('/temp');
+
+      setTemp(response.data.temp);
 
       toast.show({
         title: 'Temperatura atualizada!',
