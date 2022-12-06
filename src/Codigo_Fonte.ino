@@ -15,8 +15,8 @@ void getTemp();
 void sendPacket();
 
 const int RelePin = 23; // pino ao qual o Módulo Relé está conectado
-String statusRele = "OFF";      // variavel para ler dados recebidos pela serial
-
+std::string statusRele = "OFF";      // variavel para ler dados recebidos pela serial
+std::string off = "OFF";
 /*
   Nome da função: getTemp
   objetivo: ler a temperatura e atibiu a variável currentTemp.
@@ -87,13 +87,12 @@ void loop()
 }
 
 void ativarRele() {
-    if (statusRele == "OFF")) {     //se for A
-      digitalWrite(RelePin, HIGH); //aciona o pino
-      statusRele = "ON";
-    } 
+  int equalOrNot = statusRele.compare(off);
+  if (equalOrNot == 0) {
+      statusRele = std::string("ON");
+    }
 
-    if (statusRele ==("ON") {     //se for D
-      digitalWrite(RelePin, LOW);  //desativa o pino
-      statusRele = "OFF";
+  else {
+    statusRele = std::string("OFF");
     }
 }
