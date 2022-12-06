@@ -11,7 +11,11 @@ String packet;
 float currentTemp;
 
 float currentHumidity;
-/* Protótipo da função */
+
+const int RelePin = 23;         // pino ao qual o Módulo Relé está conectado
+String statusRele = "OFF"; // variavel para ler dados recebidos pela serial
+String off = "OFF";
+
 void getTemp()
 {
   float temperature = dht.getTemperature();
@@ -34,9 +38,6 @@ void sendPacket()
   LoRa.endPacket();
 }
 
-const int RelePin = 23;         // pino ao qual o Módulo Relé está conectado
-std::string statusRele = "OFF"; // variavel para ler dados recebidos pela serial
-std::string off = "OFF";
 /*
   Nome da função: getTemp
   objetivo: ler a temperatura e atibiu a variável currentTemp.
@@ -47,7 +48,7 @@ const char *ssid = "ESP32-AP-Temp"; // Enter SSID here
 const char *password = "getTEMP32"; // Enter Password here (min. 8 characters)
 
 /* Put IP Address details */
-IPAddress local_ip( );
+IPAddress local_ip(192, 168, 1, 1);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
@@ -91,6 +92,7 @@ void setup()
   WiFi.softAP(ssid, password);
 
   server.on("/", handle_OnConnect);
+  server.on("/rele", handle_OnRele);
   server.onNotFound(handle_NotFound);
 
   server.begin();
@@ -110,7 +112,6 @@ void loop()
   Heltec.display->display();
   sendPacket(); // Envia temperatura
 
-  ativarRele();
   Serial.println(currentTemp);
 
   // Codigo do Servidor
@@ -119,16 +120,28 @@ void loop()
 
 void ativarRele()
 {
-  int equalOrNot = statusRele.compare(off);
-  if (equalOrNot == 0)
+  if (statusRele == "OFF")
   {
-    statusRele = std::string("ON");
+    Serial.println("Caiu no if do ON");
+    statusRele = String("ON");
+    int readStatus = digitalRead(RelePin);
+    Serial.println(String(readStatus));
+    digitalWrite(RelePin, HIGH);
   }
 
   else
   {
-    statusRele = std::string("OFF");
+    Serial.println("Caiu no if do OFF");
+    statusRele = String("OFF");
+    int readStatus = digitalRead(RelePin);
+    Serial.println(String(readStatus));
+    digitalWrite(RelePin, LOW);
   }
+}
+
+void handle_OnRele() {
+  ativarRele();
+  server.send(200, "text/plain", (String)statusRele);
 }
 
 void handle_OnConnect()

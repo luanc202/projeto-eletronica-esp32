@@ -6,7 +6,7 @@ import { api } from "../services/api";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [temp, setTemp] = useState('');
+  const [temp, setTemp] = useState({});
 
   const toast = useToast();
 
@@ -15,8 +15,9 @@ export default function Home() {
       setIsLoading(true);
 
       const response = await api.get('/temp');
-
-      setTemp(response.data.temp);
+      console.log(`log: ${response}`);
+      
+      setTemp(response);
 
       toast.show({
         title: 'Temperatura atualizada!',
