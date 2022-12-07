@@ -19,19 +19,20 @@ export default function Home() {
 
       setIsRelayOn(response.data == 'ON' ? true : false);
 
-      toast.show({
-        title: `Relé ${response.data == 'ON' ? 'ligado' : 'desligado'}.`,
-        placement: 'top',
-        bgColor: 'green.500'
-      });
+      // toast.show({
+      //   title: `Relé ${response.data == 'ON' ? 'ligado' : 'desligado'}.`,
+      //   placement: 'top',
+      //   bgColor: 'green.500'
+      // });
 
     } catch (error) {
       console.log(error);
       toast.show({
         title: 'Não foi possível atualizar relé.',
         placement: 'top',
-        bgColor: 'red.500'
-      })
+        bgColor: 'red.500',
+        duration: 1500,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -46,22 +47,27 @@ export default function Home() {
 
       setTemp(text);
 
-      toast.show({
-        title: `Temperatura atualizada para ${text}C°.`,
-        placement: 'top',
-        bgColor: 'green.500'
-      });
+      // toast.show({
+      //   title: `Temperatura atualizada para ${text}C°.`,
+      //   placement: 'top',
+      //   bgColor: 'green.500'
+      // });
 
     } catch (error) {
       console.log(error);
       toast.show({
         title: 'Não foi possível atualizar temperatura.',
         placement: 'top',
-        bgColor: 'red.500'
-      })
+        bgColor: 'red.500',
+        duration: 1500
+      });
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function closeAllToast() {
+    toast.closeAll();
   }
 
   return (
@@ -107,7 +113,15 @@ export default function Home() {
           fontSize={20}
           fontFamily='bold'
           my={4}
-        >{isRelayOn == true ? 'ON' : 'OFF'}</Text>
+        >
+          {isRelayOn == true ? 'ON' : 'OFF'}
+        </Text>
+        <Button
+          title='Limpar notificações'
+          textColor="white"
+          bg='yellow.400'
+          onPress={closeAllToast}
+        />
       </Center>
     </VStack>
   )
