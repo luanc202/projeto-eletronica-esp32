@@ -6,7 +6,7 @@ import { api } from "../services/api";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
-  const [temp, setTemp] = useState({});
+  const [temp, setTemp] = useState('');
   const [isRelayOn, setIsRelayOn] = useState(false);
 
   const toast = useToast();
