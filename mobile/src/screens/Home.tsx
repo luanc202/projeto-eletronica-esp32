@@ -7,7 +7,7 @@ import { api } from "../services/api";
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [temp, setTemp] = useState({});
-  const [isRelayOn, setIsRelayOn] = useState('');
+  const [isRelayOn, setIsRelayOn] = useState(false);
 
   const toast = useToast();
 
@@ -16,13 +16,11 @@ export default function Home() {
       setIsLoading(true);
 
       const response = await api.get('/rele');
-      console.log(`log: ${response.data}`);
-      const text = String(response.data).toUpperCase();
 
-      setIsRelayOn(text);
+      setIsRelayOn(response.data == 'ON' ? true : false);
 
       toast.show({
-        // title: `Relé ${response == 'ON' ? 'ligado' : 'desligado'}.`,
+        title: `Relé ${response.data == 'ON' ? 'ligado' : 'desligado'}.`,
         placement: 'top',
         bgColor: 'green.500'
       });
@@ -44,7 +42,6 @@ export default function Home() {
       setIsLoading(true);
 
       const response = await api.get('/');
-      console.log(`log: ${response.data}`);
       const text = String(response.data);
 
       setTemp(text);
@@ -104,13 +101,13 @@ export default function Home() {
           fontFamily='bold'
           my={4}
         >Ligar/Desligar relé</Text>
-        <Switch size='lg' colorScheme="emerald" onToggle={handleGetRelay} />
+        <Switch size='lg' colorScheme="emerald" onToggle={handleGetRelay} value={isRelayOn} />
         <Text
           color='white'
           fontSize={20}
           fontFamily='bold'
           my={4}
-        >{isRelayOn}</Text>
+        >{isRelayOn == true ? 'ON' : 'OFF'}</Text>
       </Center>
     </VStack>
   )
