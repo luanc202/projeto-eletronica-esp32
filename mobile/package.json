@@ -14,6 +14,7 @@
     "@types/react-native": "~0.70.6",
     "axios": "^1.2.0",
     "expo": "~47.0.8",
+    "expo-dev-client": "~2.0.1",
     "expo-font": "~11.0.1",
     "expo-status-bar": "~1.4.2",
     "native-base": "^3.4.23",

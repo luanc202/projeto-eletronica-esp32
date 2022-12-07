@@ -1,26 +1,56 @@
-import { Text, Center, Box, VStack, useToast } from "native-base";
+import { Text, Center, Switch, VStack, useToast } from "native-base";
 import { useState } from "react";
 
 import { Button } from "../components/Button";
 import { api } from "../services/api";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [temp, setTemp] = useState({});
+  const [isRelayOn, setIsRelayOn] = useState('');
 
   const toast = useToast();
+
+  async function handleGetRelay() {
+    try {
+      setIsLoading(true);
+
+      const response = await api.get('/rele');
+      console.log(`log: ${response.data}`);
+      const text = String(response.data).toUpperCase();
+
+      setIsRelayOn(text);
+
+      toast.show({
+        // title: `Relé ${response == 'ON' ? 'ligado' : 'desligado'}.`,
+        placement: 'top',
+        bgColor: 'green.500'
+      });
+
+    } catch (error) {
+      console.log(error);
+      toast.show({
+        title: 'Não foi possível atualizar relé.',
+        placement: 'top',
+        bgColor: 'red.500'
+      })
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   async function handleGetTemperature() {
     try {
       setIsLoading(true);
 
-      const response = await api.get('/temp');
-      console.log(`log: ${response}`);
-      
-      setTemp(response);
+      const response = await api.get('/');
+      console.log(`log: ${response.data}`);
+      const text = String(response.data);
+
+      setTemp(text);
 
       toast.show({
-        title: 'Temperatura atualizada!',
+        title: `Temperatura atualizada para ${text}C°.`,
         placement: 'top',
         bgColor: 'green.500'
       });
@@ -48,6 +78,7 @@ export default function Home() {
         fontSize={32}
         fontFamily='mono'
         textAlign='center'
+        fontWeight='extrabold'
       >
         App temperatura
       </Text>
@@ -65,7 +96,21 @@ export default function Home() {
           textColor="white"
           bg='blue.700'
           onPress={handleGetTemperature}
+          isLoading={isLoading}
         />
+        <Text
+          color='white'
+          fontSize={20}
+          fontFamily='bold'
+          my={4}
+        >Ligar/Desligar relé</Text>
+        <Switch size='lg' colorScheme="emerald" onToggle={handleGetRelay} />
+        <Text
+          color='white'
+          fontSize={20}
+          fontFamily='bold'
+          my={4}
+        >{isRelayOn}</Text>
       </Center>
     </VStack>
   )
